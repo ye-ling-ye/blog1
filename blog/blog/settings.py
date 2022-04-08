@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #注册子应用
+    'users.apps.UsersConfig',
+    'home.apps.HomeConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,7 @@ ROOT_URLCONF = 'blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'Templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,10 +109,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
+#语言
+LANGUAGE_CODE = 'zh-hans'
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+#时区
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -122,6 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#设置静态资源的路径
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 #redis的配置
 CACHES = {
@@ -186,3 +195,14 @@ LOGGING = {
         },
     }
 }
+
+#替换系统的User 使用自己定义的User
+#配置信息为 ’子应用.模型类型‘
+AUTH_USER_MODEL = 'users.User'
+
+#设置为登录用户跳转的路由
+LOGIN_URL = '/login/'
+
+# 图片的统一路由
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

@@ -14,20 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
+from django.conf import settings
+from django.conf.urls.static import static
 
 #1.导入系统的logging
 import logging
-#2.创建（获取）日志器
-logger = logging.getLogger('django')
-
-from django.http import HttpResponse
-def log(request):
-    #3.使用日志器记录信息
-    logger.info('info')
-    return HttpResponse('test')
+# #2.创建（获取）日志器
+# logger = logging.getLogger('django')
+#
+# from django.http import HttpResponse
+# def log(request):
+#     #3.使用日志器记录信息
+#     logger.info('info')
+#     return HttpResponse('test')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',log),
+    #添加子路由引导
+    # include 参数1要设置为元组（urlconf_module(子应用的路由), app_name（子应用的名字））
+    # namespace 设置命名空间（用于防止不同子应用之间的名字导致的冲突）
+    path('', include(('users.urls', 'users'), namespace='users')),
+    path('', include(('home.urls','home'),namespace='home')),
 ]
+
+#以下代码为设置图片访问路由规则
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
